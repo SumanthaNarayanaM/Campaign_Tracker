@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
+import './styles.css';
 const API = process.env.REACT_APP_API || 'http://localhost:5000/api';
 
 function App() {
@@ -150,9 +150,8 @@ function App() {
           </table>
         )}
       </section>
-
-      <footer className="footer"> Simple Campaign Tracker</footer>
-    </div>
+      <footer className="footer"> Simple Campaign Tracker powred by Sumantha Narayana M</footer>
+      </div>
   );
 }
 
