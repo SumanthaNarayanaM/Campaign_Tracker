@@ -27,24 +27,35 @@ function App() {
 }
 
   async function addCampaign(e) {
-    e.preventDefault();
-    if (!form.campaignName || !form.clientName || !form.startDate) return alert('Please fill required fields');
-    try {
-      const res = await fetch(`${API}/campaigns`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      });
-      if (res.ok) {
-        const newC = await res.json();
-        setCampaigns(prev => [newC, ...prev]);
-        setForm({ campaignName: '', clientName: '', startDate: '', status: 'Active' });
-      } else {
-        const err = await res.json();
-        alert(err.error || 'Failed');
-      }
-    } catch (e) { console.error(e); }
+  e.preventDefault();
+  if (!form.campaignName || !form.clientName || !form.startDate) {
+    return alert('Please fill required fields');
   }
+  try {
+    setLoading(true);
+    const res = await fetch(`${API}/campaigns`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    });
+    const contentType = res.headers.get('content-type') || '';
+    const body = contentType.includes('application/json') ? await res.json() : null;
+
+    if (res.ok) {
+      const newC = body || {}; 
+      setCampaigns(prev => [newC, ...prev]);
+      setForm({ campaignName: '', clientName: '', startDate: '', status: 'Active' });
+    } else {
+      const msg = (body && (body.error || body.message)) || `Failed: ${res.status} ${res.statusText}`;
+      alert(msg);
+    }
+  } catch (err) {
+    console.error('Add campaign failed:', err);
+    alert('Network or server error. Check console/logs.');
+  } finally {
+    setLoading(false);
+  }
+}
 
   async function updateStatus(id, status) {
     try {
