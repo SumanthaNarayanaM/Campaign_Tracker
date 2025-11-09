@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './styles.css';
-const API = process.env.REACT_APP_API='https://campaign-tracker-vlru.onrender.com' || 'http://localhost:5000/api';
+const API = process.env.REACT_APP_API || 'https://campaign-tracker-vlru.onrender.com' || 'http://localhost:5000/api';
 
 function App() {
   const [campaigns, setCampaigns] = useState([]);
