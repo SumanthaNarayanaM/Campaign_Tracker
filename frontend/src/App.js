@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './styles.css';
-const API = process.env.REACT_APP_API || 'https://campaign-tracker-vlru.onrender.com' || 'http://localhost:5000/api';
+const API = process.env.REACT_APP_API || 'https://campaign-tracker-vlru.onrender.com/api' || 'http://localhost:5000/api';
 
 function App() {
   const [campaigns, setCampaigns] = useState([]);
@@ -12,14 +12,19 @@ function App() {
   useEffect(() => { fetchCampaigns(); }, []);
 
   async function fetchCampaigns() {
+  try {
     setLoading(true);
-    try {
-      const res = await fetch(`${API}/campaigns`);
-      const data = await res.json();
-      setCampaigns(data.reverse());
-    } catch (e) { console.error(e); } 
-    finally { setLoading(false); }
+    const res = await fetch(`${API}/campaigns`); 
+    if (!res.ok) throw new Error(`Fetch failed: ${res.status} ${res.statusText}`);
+    const data = await res.json();
+    setCampaigns(data);
+  } catch (err) {
+    console.error('Error fetching campaigns:', err);
+    setCampaigns([]); 
+  } finally {
+    setLoading(false);
   }
+}
 
   async function addCampaign(e) {
     e.preventDefault();
