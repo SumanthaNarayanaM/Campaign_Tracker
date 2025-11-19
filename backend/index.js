@@ -10,14 +10,14 @@ app.use(bodyParser.json());
 
 const dbFile = './campaigns.json';
 
-// Helper: read campaigns from file
+// read campaigns from file
 function readCampaigns() {
   if (!fs.existsSync(dbFile)) fs.writeFileSync(dbFile, '[]');
   const data = fs.readFileSync(dbFile);
   return JSON.parse(data);
 }
 
-// Helper: write campaigns to file
+// write campaigns to file
 function writeCampaigns(data) {
   fs.writeFileSync(dbFile, JSON.stringify(data, null, 2));
 }
